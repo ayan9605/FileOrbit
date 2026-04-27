@@ -1,0 +1,47 @@
+<!-- frontend/public/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Telegram Cloud Storage</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main>
+    <section id="auth-section">
+      <h1>Telegram Cloud Storage</h1>
+
+      <div id="signup-box" class="auth-box">
+        <h2>Sign Up</h2>
+        <input id="signup-email" type="email" placeholder="Email" />
+        <input id="signup-password" type="password" placeholder="Password" />
+        <button id="signup-btn">Sign Up</button>
+      </div>
+
+      <div id="login-box" class="auth-box">
+        <h2>Log In</h2>
+        <input id="login-email" type="email" placeholder="Email" />
+        <input id="login-password" type="password" placeholder="Password" />
+        <button id="login-btn">Log In</button>
+      </div>
+    </section>
+
+    <section id="app-section" class="hidden">
+      <header>
+        <h2>Your Files</h2>
+        <button id="logout-btn">Logout</button>
+      </header>
+
+      <div id="upload-box">
+        <input id="file-input" type="file" />
+        <button id="upload-btn">Upload</button>
+        <span id="upload-status"></span>
+      </div>
+
+      <ul id="file-list"></ul>
+    </section>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>
