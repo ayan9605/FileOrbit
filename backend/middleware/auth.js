@@ -1,19 +1,16 @@
-// backend/middleware/auth.js
-const jwt = require('jsonwebtoken');
-const { jwtSecret } = require('../config/env');
-
-/**
- * Verify JWT and attach user to req.user.
- * Expects "Authorization: Bearer <token>" header.[web:6][web:12]
- */
+// backend/middleware/auth.js (updated)
 function authMiddleware(req, res, next) {
+  let token = null;
+
   const authHeader = req.headers['authorization'] || '';
-  const token = authHeader.startsWith('Bearer ')
-    ? authHeader.substring(7)
-    : null;
+  if (authHeader.startsWith('Bearer ')) {
+    token = authHeader.substring(7);
+  } else if (req.query && req.query.token) {
+    token = req.query.token;
+  }
 
   if (!token) {
-    return res.status(401).json({ message: 'Missing Authorization header' });
+    return res.status(401).json({ message: 'Missing token' });
   }
 
   try {
@@ -24,5 +21,3 @@ function authMiddleware(req, res, next) {
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
 }
-
-module.exports = authMiddleware;
