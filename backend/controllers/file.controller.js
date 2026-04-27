@@ -38,7 +38,7 @@ async function uploadFile(req, res, next) {
       telegramChatId: telegramChannelId
     });
 
-    res.status(201).json({
+    return res.status(201).json({
       id: dbFile._id,
       originalName: dbFile.originalName,
       mimeType: dbFile.mimeType,
@@ -46,7 +46,7 @@ async function uploadFile(req, res, next) {
       createdAt: dbFile.createdAt
     });
   } catch (err) {
-    next(err);
+    return next(err);
   }
 }
 
@@ -60,7 +60,7 @@ async function listFiles(req, res, next) {
       .sort({ createdAt: -1 })
       .lean();
 
-    res.json(
+    return res.json(
       files.map((f) => ({
         id: f._id,
         originalName: f.originalName,
@@ -70,7 +70,7 @@ async function listFiles(req, res, next) {
       }))
     );
   } catch (err) {
-    next(err);
+    return next(err);
   }
 }
 
@@ -86,7 +86,7 @@ async function streamFile(req, res, next) {
       return res.status(404).json({ message: 'File not found' });
     }
 
-    // Get temporary file_path via getFile.[web:2][web:5][web:11]
+    // Get temporary file_path via getFile
     const filePath = await getTelegramFilePath(dbFile.telegramFileId);
     const fileUrl = buildTelegramFileUrl(filePath);
 
@@ -96,13 +96,12 @@ async function streamFile(req, res, next) {
     });
 
     res.setHeader('Content-Type', dbFile.mimeType || 'application/octet-stream');
-
     // Optional: force download instead of inline
     // res.setHeader('Content-Disposition', `attachment; filename="${dbFile.originalName}"`);
 
-    tgResponse.data.pipe(res);
+    return tgResponse.data.pipe(res);
   } catch (err) {
-    next(err);
+    return next(err);
   }
 }
 
@@ -128,9 +127,9 @@ async function deleteFile(req, res, next) {
 
     await dbFile.deleteOne();
 
-    res.json({ message: 'File deleted' });
+    return res.json({ message: 'File deleted' });
   } catch (err) {
-    next(err);
+    return next(err);
   }
 }
 
