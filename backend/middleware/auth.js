@@ -1,4 +1,7 @@
-// backend/middleware/auth.js (updated)
+// backend/middleware/auth.js
+const jwt = require('jsonwebtoken');
+const { jwtSecret } = require('../config/env');
+
 function authMiddleware(req, res, next) {
   let token = null;
 
@@ -16,8 +19,10 @@ function authMiddleware(req, res, next) {
   try {
     const payload = jwt.verify(token, jwtSecret);
     req.user = { id: payload.sub, email: payload.email };
-    next();
+    return next();
   } catch (err) {
     return res.status(401).json({ message: 'Invalid or expired token' });
   }
 }
+
+module.exports = authMiddleware;
